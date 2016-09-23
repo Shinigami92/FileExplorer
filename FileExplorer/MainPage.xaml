@@ -5,9 +5,126 @@
     xmlns:local="using:FileExplorer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    </Grid>
+    mc:Ignorable="d" x:Name="MainPageRoot">
+    <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320">
+        <SplitView.Pane>
+            <StackPanel>
+                <Button x:Name="MenuButtonMainLeft" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="48" Background="Transparent" Click="MenuButtonMainLeft_Click"></Button>
+                <ListView SelectionChanged="ListView_SelectionChanged">
+                    <ListView.Items>
+                        <ListViewItem x:Name="MenuButtonAddFolder" Background="Transparent" Padding="0">
+                            <StackPanel Orientation="Horizontal">
+                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xECC8;" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
+                                <TextBlock Text="Add Folder" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView.Items>
+                </ListView>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButtonQuickAccess" FontFamily="Segoe MDL2 Assets" Content="&#xE945;" Width="48" Height="48" Background="Transparent"></Button>
+                    <TextBlock Text="Quick access" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButtonOneDrive" FontFamily="Segoe MDL2 Assets" Content="&#xE753;" Width="48" Height="48" Background="Transparent"></Button>
+                    <TextBlock Text="OneDrive" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButtonThisPC" FontFamily="Segoe MDL2 Assets" Content="&#xEC4E;" Width="48" Height="48" Background="Transparent" Click="MenuButtonThisPC_Click"></Button>
+                    <TextBlock Text="This PC" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButtonLocalDiskC" FontFamily="Segoe MDL2 Assets" Content="&#xEDA2;" Width="48" Height="48" Background="Transparent" Click="MenuButtonLocalDiskC_Click"></Button>
+                    <TextBlock Text="Local Disk (C:)" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="MenuButtonStorageDiskD" FontFamily="Segoe MDL2 Assets" Content="&#xEDA2;" Width="48" Height="48" Background="Transparent"></Button>
+                    <TextBlock Text="Storage Disk (D:)" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
+            <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <AppBar x:Name="AppBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" IsOpen="False" IsSticky="True"/>
+                <!-- TODO: Fix the panel below AppBar to align with AppBar height -->
+                <RelativePanel RelativePanel.Below="AppBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                        <TextBlock Text="Sort by:" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+                        <ComboBox VerticalAlignment="Center" Width="100" SelectedIndex="0">
+                            <ComboBoxItem x:Name="SortByComboBoxItemName" Content="Name"></ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                    <Grid RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="48"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Column 01" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="0" Grid.Row="0"></TextBlock>
+                        <TextBlock Text="Column 02" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
+                        <ListView x:Name="FileListView" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemClick="FileListView_ItemClick">
+                            <!--
+                            <ListView.Header>
+                                <ListViewHeaderItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Column 01" Grid.Column="0"></TextBlock>
+                                        <TextBlock Text="Column 02" Grid.Column="1"></TextBlock>
+                                    </Grid>
+                                </ListViewHeaderItem>
+                            </ListView.Header>
+                            -->
+                            <ListView.Items>
+                                <ListViewItem HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Column 01" Grid.Column="0"></TextBlock>
+                                        <TextBlock Text="Column 02" Grid.Column="1"></TextBlock>
+                                    </Grid>
+                                </ListViewItem>
+                            </ListView.Items>
+                        </ListView>
+                        <!--
+                        <ScrollViewer>
+                            <ListView SelectionMode="Extended">
+                                <ListView.Header>
+                                    <ListViewHeaderItem>Column</ListViewHeaderItem>
+                                </ListView.Header>
+                                <ListView.Items>
+                                    <ListViewItem Content="Test01"></ListViewItem>
+                                    <ListViewItem Content="Test02"></ListViewItem>
+                                </ListView.Items>
+                            </ListView>
+                        </ScrollViewer>
+                        -->
+                    </Grid>
+                </RelativePanel>
+                <RelativePanel x:Name="Footer" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <StackPanel Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True">
+                        <TextBlock Text="Home" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="Share" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="View" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+                        <TextBlock Text="Picture" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True">
+                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE971;" Width="48" Height="48" Background="Transparent"></Button>
+                    </StackPanel>
+                </RelativePanel>
+            </RelativePanel>
+            <!--
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <AppBar/>
+                <TextBlock Text="SplitView Basic" FontSize="54" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            </Grid>
+            -->
+        </SplitView.Content>
+    </SplitView>
 </Page>

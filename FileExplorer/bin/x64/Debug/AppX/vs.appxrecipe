@@ -16,7 +16,7 @@
     <PackageRegistrationPath>
     </PackageRegistrationPath>
     <RemoveNonLayoutFiles>true</RemoveNonLayoutFiles>
-    <RegisteredManifestChecksum>8010C70ECB66B2935FB6E7B045AF170EA2DE1778991DB98A60EB8F34803EFFF4</RegisteredManifestChecksum>
+    <RegisteredManifestChecksum>5D8088CA1882E1E6348EBA1244B2B28CB115F27DDFFF3FB6C326EFA6451EC4C2</RegisteredManifestChecksum>
     <RegisteredPackageMoniker>b535cc57-f560-428b-9de4-b3df65241d65_1.0.0.0_x64__a5s740xv383r0</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>b535cc57-f560-428b-9de4-b3df65241d65_a5s740xv383r0!App</RegisteredUserModeAppID>
     <RegisteredPackageID>b535cc57-f560-428b-9de4-b3df65241d65</RegisteredPackageID>
@@ -28,13 +28,13 @@
     <AppXManifest Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-09-21T16:27:51.642</Modified>
+      <Modified>2016-09-23T17:43:15.708</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\FileExplorer.exe">
       <PackagePath>entrypoint\FileExplorer.exe</PackagePath>
-      <Modified>2016-09-21T16:27:50.746</Modified>
+      <Modified>2016-09-23T17:43:15.044</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Shinigami\.nuget\packages\Microsoft.CSharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -488,7 +488,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\FileExplorer.xr.xml">
       <PackagePath>FileExplorer.xr.xml</PackagePath>
-      <Modified>2016-09-21T16:17:03.599</Modified>
+      <Modified>2016-09-23T17:43:14.887</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -497,11 +497,11 @@
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-09-21T16:27:51.429</Modified>
+      <Modified>2016-09-23T17:43:15.570</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\Core\FileExplorer.exe">
       <PackagePath>FileExplorer.exe</PackagePath>
-      <Modified>2016-09-21T16:27:51.633</Modified>
+      <Modified>2016-09-23T17:43:15.705</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
