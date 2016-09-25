@@ -28,13 +28,13 @@
     <AppXManifest Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-09-23T17:43:15.708</Modified>
+      <Modified>2016-09-25T12:23:31.276</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\FileExplorer.exe">
       <PackagePath>entrypoint\FileExplorer.exe</PackagePath>
-      <Modified>2016-09-23T17:43:15.044</Modified>
+      <Modified>2016-09-25T12:23:30.879</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Shinigami\.nuget\packages\Microsoft.CSharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -488,7 +488,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\FileExplorer.xr.xml">
       <PackagePath>FileExplorer.xr.xml</PackagePath>
-      <Modified>2016-09-23T17:43:14.887</Modified>
+      <Modified>2016-09-25T12:22:37.144</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Program Files %28x86%29\Windows Kits\10\UnionMetadata\Windows.winmd">
       <PackagePath>WinMetadata\Windows.winmd</PackagePath>
@@ -497,11 +497,11 @@
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-09-23T17:43:15.570</Modified>
+      <Modified>2016-09-25T12:22:37.867</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\Shinigami\Documents\Visual Studio 2015\Projects\FileExplorer\FileExplorer\bin\x64\Debug\Core\FileExplorer.exe">
       <PackagePath>FileExplorer.exe</PackagePath>
-      <Modified>2016-09-23T17:43:15.705</Modified>
+      <Modified>2016-09-25T12:23:31.270</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
