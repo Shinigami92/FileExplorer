@@ -35,7 +35,7 @@ namespace FileExplorer
         {
             this.InitializeComponent();
 
-            StorageApplicationPermissions.FutureAccessList.Entries.ToList().ForEach(e => Debug.WriteLine(e.Metadata));
+            StorageApplicationPermissions.FutureAccessList.Entries.ToList().ForEach(e => Debug.WriteLine("Metadata: " + e.Metadata + " Token: " + e.Token));
             //StorageApplicationPermissions.FutureAccessList.Clear();
 
             //ItemCollection fileListViewItems = FileListView.Items;
@@ -66,13 +66,6 @@ namespace FileExplorer
             item.Content = itemGrid;
             item.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             item.VerticalContentAlignment = VerticalAlignment.Center;
-
-            MenuFlyout itemFlyout = new MenuFlyout();
-            MenuFlyoutItem deleteItem = new MenuFlyoutItem();
-            deleteItem.Text = "Delete";
-            itemFlyout.Items.Add(deleteItem);
-            item.ContextFlyout = itemFlyout;
-            //TODO: Show the ContextFlyout on right click
 
             return item;
         }
@@ -151,7 +144,26 @@ namespace FileExplorer
             sp.Children.Add(btn);
             sp.Children.Add(tb);
 
+            MenuFlyout itemFlyout = new MenuFlyout();
+            MenuFlyoutItem removeItem = new MenuFlyoutItem();
+            removeItem.Text = "Remove";
+            removeItem.Click += MenuListViewItemRemove_Click;
+            removeItem.Tag = lvi;
+            itemFlyout.Items.Add(removeItem);
+            lvi.ContextFlyout = itemFlyout;
+
             return lvi;
+        }
+
+        private void MenuListViewItemRemove_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem source = e.OriginalSource as MenuFlyoutItem;
+            ListViewItem lvi = source.Tag as ListViewItem;
+            StorageFolder storageFolder = lvi.Tag as StorageFolder;
+            AccessListEntry entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == storageFolder.Path);
+            StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
+            MenuListViewFolders.Items.Remove(lvi);
+            Debug.WriteLine("Removed FolderItem with Name: " + entry.Metadata + " Token: " + entry.Token);
         }
 
         private async void MenuListViewFolders_Loaded(object sender, RoutedEventArgs e)
