@@ -5,6 +5,7 @@
     xmlns:local="using:FileExplorer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:FileExplorer.Models"
     mc:Ignorable="d" x:Name="MainPageRoot">
     <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320">
         <SplitView.Pane>
@@ -18,7 +19,29 @@
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
-                <ListView x:Name="MenuListViewFolders" ItemClick="MenuListViewFolders_ItemClick" Loaded="MenuListViewFolders_Loaded" IsItemClickEnabled="True">
+                <ListView x:Name="MenuListViewFolders" ItemsSource="{x:Bind MenuFolderItems}" ItemClick="MenuListViewFolders_ItemClick" Loaded="MenuListViewFolders_Loaded" IsItemClickEnabled="True">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:MenuFolderItem">
+                            <StackPanel Orientation="Horizontal" Tag="{x:Bind Folder}" ToolTipService.ToolTip="{x:Bind DisplayName}" ToolTipService.Placement="Mouse">
+                                <StackPanel.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyout.Items>
+                                            <MenuFlyoutItem Text="Remove" Click="MenuListViewItemRemove_Click" Tag="{x:Bind Folder}"/>
+                                        </MenuFlyout.Items>
+                                    </MenuFlyout>
+                                </StackPanel.ContextFlyout>
+                                <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
+                                <TextBlock Text="{x:Bind DisplayName}" FontSize="18" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
         </SplitView.Pane>
@@ -48,9 +71,27 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="0" Grid.Row="0"></TextBlock>
                         <TextBlock Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
-                        <ListView x:Name="FileListView" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
-                            <ListView.Items>
-                            </ListView.Items>
+                        <ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:FileItem">
+                                    <Grid Tag="{x:Bind StorageItem}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.Children>
+                                            <TextBlock Text="{x:Bind Name}" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind DateCreated}" Grid.Column="1"/>
+                                        </Grid.Children>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
                 </RelativePanel>

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FileExplorer.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -30,44 +32,14 @@ namespace FileExplorer
     public sealed partial class MainPage : Page
     {
         private StorageFolder currentFolder = null;
+        private ObservableCollection<MenuFolderItem> MenuFolderItems = new ObservableCollection<MenuFolderItem>();
+        private ObservableCollection<FileItem> FileItems = new ObservableCollection<FileItem>();
 
         public MainPage()
         {
             this.InitializeComponent();
-
             StorageApplicationPermissions.FutureAccessList.Entries.ToList().ForEach(e => Debug.WriteLine("Metadata: " + e.Metadata + " Token: " + e.Token));
             //StorageApplicationPermissions.FutureAccessList.Clear();
-
-            //ItemCollection fileListViewItems = FileListView.Items;
-            //Debug.WriteLine("FileListViewItems.Count: " + fileListViewItems.Count);
-            //fileListViewItems.Clear();
-
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    fileListViewItems.Add(BuildFileListViewItem("Column 01", "Column 02"));
-            //}
-        }
-
-        private ListViewItem BuildFileListViewItem(IStorageItem storageItem)
-        {
-            Grid itemGrid = new Grid();
-            itemGrid.Tag = storageItem;
-            itemGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            itemGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            TextBlock tbLeft = new TextBlock();
-            tbLeft.Text = storageItem.Name;
-            Grid.SetColumn(tbLeft, 0);
-            itemGrid.Children.Add(tbLeft);
-            TextBlock tbRight = new TextBlock();
-            tbRight.Text = storageItem.DateCreated.ToString();
-            Grid.SetColumn(tbRight, 1);
-            itemGrid.Children.Add(tbRight);
-            ListViewItem item = new ListViewItem();
-            item.Content = itemGrid;
-            item.HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            item.VerticalContentAlignment = VerticalAlignment.Center;
-
-            return item;
         }
 
         private void MenuButtonMainLeft_Click(object sender, RoutedEventArgs e)
@@ -77,17 +49,17 @@ namespace FileExplorer
 
         private async void FileListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Grid item = (Grid)e.ClickedItem;
-            IStorageItem storageItem = (IStorageItem)item.Tag;
-            Debug.WriteLine("[FileListView_ItemClick] Clicked on: " + storageItem.Name);
-            if (storageItem.Attributes.HasFlag(Windows.Storage.FileAttributes.Directory))
+            FileItem fi = e.ClickedItem as FileItem;
+            IStorageItem storageItem = fi.StorageItem;
+            Debug.WriteLine("[FileListView_ItemClick] Clicked on: " + fi.Name);
+            if (fi.IsFolder)
             {
-                StorageFolder folder = (StorageFolder)storageItem;
-                FileListView.Items.Clear();
+                StorageFolder folder = storageItem as StorageFolder;
+                FileItems.Clear();
                 IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
                 foreach (IStorageItem folderItem in folderItems)
                 {
-                    FileListView.Items.Add(BuildFileListViewItem(folderItem));
+                    FileItems.Add(new FileItem(folderItem));
                 }
                 currentFolder = folder;
             }
@@ -114,55 +86,19 @@ namespace FileExplorer
             {
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
                 Debug.WriteLine("Opened the folder: " + folder.DisplayName);
-
-                MenuListViewFolders.Items.Add(BuildMenuListViewItem("\xEDA2", folder.DisplayName, folder));
+                MenuFolderItems.Add(new MenuFolderItem(folder));
             }
-        }
-
-        private ListViewItem BuildMenuListViewItem(string icon, string text, StorageFolder folder)
-        {
-            ListViewItem lvi = new ListViewItem();
-            lvi.Padding = new Thickness(0);
-            ToolTipService.SetPlacement(lvi, PlacementMode.Mouse);
-            ToolTipService.SetToolTip(lvi, folder.DisplayName);
-            lvi.Tag = folder;
-            StackPanel sp = new StackPanel();
-            sp.Orientation = Orientation.Horizontal;
-            sp.Tag = folder;
-            lvi.Content = sp;
-            Button btn = new Button();
-            btn.FontFamily = new FontFamily("Segoe MDL2 Assets");
-            btn.Content = icon;
-            btn.Width = 48;
-            btn.Height = 48;
-            btn.Background = new SolidColorBrush(Colors.Transparent);
-            btn.IsHitTestVisible = false;
-            TextBlock tb = new TextBlock();
-            tb.Text = text;
-            tb.FontSize = 18;
-            tb.VerticalAlignment = VerticalAlignment.Center;
-            sp.Children.Add(btn);
-            sp.Children.Add(tb);
-
-            MenuFlyout itemFlyout = new MenuFlyout();
-            MenuFlyoutItem removeItem = new MenuFlyoutItem();
-            removeItem.Text = "Remove";
-            removeItem.Click += MenuListViewItemRemove_Click;
-            removeItem.Tag = lvi;
-            itemFlyout.Items.Add(removeItem);
-            lvi.ContextFlyout = itemFlyout;
-
-            return lvi;
         }
 
         private void MenuListViewItemRemove_Click(object sender, RoutedEventArgs e)
         {
             MenuFlyoutItem source = e.OriginalSource as MenuFlyoutItem;
-            ListViewItem lvi = source.Tag as ListViewItem;
-            StorageFolder storageFolder = lvi.Tag as StorageFolder;
-            AccessListEntry entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == storageFolder.Path);
+            Debug.WriteLine("source.Tag: " + source.Tag);
+            StorageFolder storageFolder = source.Tag as StorageFolder;
+            MenuFolderItem f = MenuFolderItems.ToList().Find(item => item.Folder == storageFolder);
+            AccessListEntry entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == f.Folder.Path);
             StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
-            MenuListViewFolders.Items.Remove(lvi);
+            MenuFolderItems.Remove(f);
             Debug.WriteLine("Removed FolderItem with Name: " + entry.Metadata + " Token: " + entry.Token);
         }
 
@@ -173,22 +109,21 @@ namespace FileExplorer
                 StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(entry.Metadata);
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
                 Debug.WriteLine("Opened the folder: " + folder.DisplayName);
-                MenuListViewFolders.Items.Add(BuildMenuListViewItem("\xEDA2", folder.DisplayName, folder));
+                MenuFolderItems.Add(new MenuFolderItem(folder));
             }
         }
 
         private async void MenuListViewFolders_ItemClick(object sender, ItemClickEventArgs e)
         {
-            StackPanel stackPanel = (StackPanel)e.ClickedItem;
-            StorageFolder folder = (StorageFolder)stackPanel.Tag;
-            Debug.WriteLine("[MenuListViewFolders_ItemClick] Clicked on: " + folder.DisplayName);
-            FileListView.Items.Clear();
-            IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
+            MenuFolderItem f = e.ClickedItem as MenuFolderItem;
+            Debug.WriteLine("[MenuListViewFolders_ItemClick] Clicked on: " + f.DisplayName);
+            FileItems.Clear();
+            IReadOnlyList<IStorageItem> folderItems = await f.Folder.GetItemsAsync();
             foreach (IStorageItem folderItem in folderItems)
             {
-                FileListView.Items.Add(BuildFileListViewItem(folderItem));
+                FileItems.Add(new FileItem(folderItem));
             }
-            currentFolder = folder;
+            currentFolder = f.Folder;
         }
 
         private async void FolderUpButton_Click(object sender, RoutedEventArgs e)
@@ -198,11 +133,11 @@ namespace FileExplorer
                 StorageFolder parentFolder = await currentFolder.GetParentAsync();
                 if (parentFolder != null)
                 {
-                    FileListView.Items.Clear();
+                    FileItems.Clear();
                     IReadOnlyList<IStorageItem> folderItems = await parentFolder.GetItemsAsync();
                     foreach (IStorageItem folderItem in folderItems)
                     {
-                        FileListView.Items.Add(BuildFileListViewItem(folderItem));
+                        FileItems.Add(new FileItem(folderItem));
                     }
                     currentFolder = parentFolder;
                 }

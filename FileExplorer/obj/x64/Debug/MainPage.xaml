@@ -5,6 +5,7 @@
     xmlns:local="using:FileExplorer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:FileExplorer.Models"
     mc:Ignorable="d" x:Name="MainPageRoot">
     <SplitView x:ConnectionId='2' x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320">
         <SplitView.Pane>
@@ -18,23 +19,45 @@
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
-                <ListView x:ConnectionId='5' x:Name="MenuListViewFolders"                                                                               IsItemClickEnabled="True">
+                <ListView x:ConnectionId='5' x:Name="MenuListViewFolders"                                                                                                                      IsItemClickEnabled="True">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate                                   >
+                            <StackPanel x:ConnectionId='6' Orientation="Horizontal"                                                                     ToolTipService.Placement="Mouse">
+                                <StackPanel.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyout.Items>
+                                            <MenuFlyoutItem x:ConnectionId='7' Text="Remove"                                                           />
+                                        </MenuFlyout.Items>
+                                    </MenuFlyout>
+                                </StackPanel.ContextFlyout>
+                                <Button x:ConnectionId='8' FontFamily="Segoe MDL2 Assets"                         Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
+                                <TextBlock x:ConnectionId='9'                             FontSize="18" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
         </SplitView.Pane>
         <SplitView.Content>
             <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <AppBar x:ConnectionId='6' x:Name="AppBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" IsOpen="False" IsSticky="False">
+                <AppBar x:ConnectionId='10' x:Name="AppBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" IsOpen="False" IsSticky="False">
                     <StackPanel Orientation="Horizontal">
-                        <AppBarButton x:ConnectionId='12' x:Name="FolderUpButton" Icon="Up" Label="Folder Up"                             ></AppBarButton>
+                        <AppBarButton x:ConnectionId='19' x:Name="FolderUpButton" Icon="Up" Label="Folder Up"                             ></AppBarButton>
                     </StackPanel>
                 </AppBar>
                 <!-- TODO: Fix the panel below AppBar to align with AppBar height -->
-                <RelativePanel x:ConnectionId='7' x:Name="FolderViewPanel" RelativePanel.Below="AppBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <StackPanel x:ConnectionId='9' x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <RelativePanel x:ConnectionId='11' x:Name="FolderViewPanel" RelativePanel.Below="AppBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <StackPanel x:ConnectionId='13' x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <TextBlock Text="Sort by:" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
                         <ComboBox VerticalAlignment="Center" Width="100" SelectedIndex="0">
-                            <ComboBoxItem x:ConnectionId='11' x:Name="SortByComboBoxItemName" Content="Name"></ComboBoxItem>
+                            <ComboBoxItem x:ConnectionId='18' x:Name="SortByComboBoxItemName" Content="Name"></ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <Grid RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -48,13 +71,31 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="0" Grid.Row="0"></TextBlock>
                         <TextBlock Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
-                        <ListView x:ConnectionId='10' x:Name="FileListView" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"                                    IsItemClickEnabled="True">
-                            <ListView.Items>
-                            </ListView.Items>
+                        <ListView x:ConnectionId='14' x:Name="FileListView"                                  SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"                                    IsItemClickEnabled="True">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate                             >
+                                    <Grid x:ConnectionId='15'                           >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.Children>
+                                            <TextBlock x:ConnectionId='16'                      Grid.Column="0"/>
+                                            <TextBlock x:ConnectionId='17'                             Grid.Column="1"/>
+                                        </Grid.Children>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
                 </RelativePanel>
-                <RelativePanel x:ConnectionId='8' x:Name="Footer" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <RelativePanel x:ConnectionId='12' x:Name="Footer" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <StackPanel Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True">
                         <TextBlock Text="Home" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
                         <TextBlock Text="Share" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
