@@ -14,6 +14,7 @@ using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.UI;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -62,6 +63,7 @@ namespace FileExplorer
                     FileItems.Add(new FileItem(folderItem));
                 }
                 currentFolder = folder;
+                UpdateCurrentFolderPathPanel();
             }
             else
             {
@@ -124,6 +126,7 @@ namespace FileExplorer
                 FileItems.Add(new FileItem(folderItem));
             }
             currentFolder = f.Folder;
+            UpdateCurrentFolderPathPanel();
         }
 
         private async void FolderUpButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +143,7 @@ namespace FileExplorer
                         FileItems.Add(new FileItem(folderItem));
                     }
                     currentFolder = parentFolder;
+                    UpdateCurrentFolderPathPanel();
                 }
                 else
                 {
@@ -150,6 +154,59 @@ namespace FileExplorer
             {
                 Debug.WriteLine("There was no currentFolder");
             }
+        }
+
+        private void UpdateCurrentFolderPathPanel()
+        {
+            if (this.currentFolder != null)
+            {
+                CurrentFolderPathPanel.Children.Clear();
+                string path = this.currentFolder.Path;
+                string[] parts = path.Split('\\');
+                int i;
+                Button btn = new Button();
+                btn.Content = parts[0];
+                btn.FontSize = 20;
+                btn.FontWeight = FontWeights.SemiBold;
+                btn.Background = new SolidColorBrush(Colors.Transparent);
+                btn.VerticalAlignment = VerticalAlignment.Stretch;
+                btn.BorderThickness = new Thickness();
+                CurrentFolderPathPanel.Children.Add(btn);
+
+                if (parts.Length > 0 && parts[1].Length != 0)
+                {
+                    TextBlock tb;
+                    for (i = 1; i < parts.Length; i++)
+                    {
+                        tb = new TextBlock();
+                        tb.FontFamily = new FontFamily("Segoe MDL2 Assets");
+                        tb.Text = "\xE937";
+                        tb.FontSize = 12;
+                        tb.Padding = new Thickness(4, 4, 0, 0);
+                        tb.VerticalAlignment = VerticalAlignment.Center;
+                        CurrentFolderPathPanel.Children.Add(tb);
+
+                        btn = new Button();
+                        btn.Content = parts[i];
+                        btn.FontSize = 20;
+                        btn.FontWeight = FontWeights.SemiBold;
+                        btn.Background = new SolidColorBrush(Colors.Transparent);
+                        btn.VerticalAlignment = VerticalAlignment.Stretch;
+                        btn.BorderThickness = new Thickness();
+                        CurrentFolderPathPanel.Children.Add(btn);
+                    }
+                }
+            }
+        }
+
+        private void CommandBar_Opening(object sender, object e)
+        {
+            FolderUpButton.Label = "Folder Up";
+        }
+
+        private void CommandBar_Closing(object sender, object e)
+        {
+            FolderUpButton.Label = "";
         }
     }
 }

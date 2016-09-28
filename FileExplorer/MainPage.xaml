@@ -47,13 +47,23 @@
         </SplitView.Pane>
         <SplitView.Content>
             <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <AppBar x:Name="AppBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" IsOpen="False" IsSticky="False">
-                    <StackPanel Orientation="Horizontal">
-                        <AppBarButton x:Name="FolderUpButton" Icon="Up" Label="Folder Up" Click="FolderUpButton_Click"></AppBarButton>
-                    </StackPanel>
-                </AppBar>
-                <!-- TODO: Fix the panel below AppBar to align with AppBar height -->
-                <RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="AppBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <CommandBar x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Opening="CommandBar_Opening" Closing="CommandBar_Closing">
+                    <CommandBar.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <AppBarButton x:Name="FolderUpButton" Icon="Up" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
+                            <StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top">
+                                <!--
+                                <Button Content="C:" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE937;" FontSize="12" Padding="4,4,0,0" VerticalAlignment="Center"/>
+                                <Button Content="Users" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE937;" FontSize="12" Padding="4,4,0,0" VerticalAlignment="Center"/>
+                                <Button Content="Shinigami" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
+                                -->
+                            </StackPanel>
+                        </StackPanel>
+                    </CommandBar.Content>
+                </CommandBar>
+                <RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="CommandBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <TextBlock Text="Sort by:" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
                         <ComboBox VerticalAlignment="Center" Width="100" SelectedIndex="0">
@@ -62,32 +72,36 @@
                     </StackPanel>
                     <Grid RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="36"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="48"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="0" Grid.Row="0"></TextBlock>
-                        <TextBlock Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
-                        <ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
+                        <TextBlock Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
+                        <TextBlock Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="2" Grid.Row="0"></TextBlock>
+                        <ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True" HorizontalContentAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="Padding" Value="0"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
                                     <Grid Tag="{x:Bind StorageItem}">
                                         <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="36"/>
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.Children>
-                                            <TextBlock Text="{x:Bind Name}" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind DateCreated}" Grid.Column="1"/>
+                                            <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Height="36" Width="36" Background="Transparent" VerticalAlignment="Stretch" Grid.Column="0" IsHitTestVisible="False"/>
+                                            <TextBlock Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind DateCreated}" Margin="8,0" VerticalAlignment="Center" Grid.Column="2"/>
                                         </Grid.Children>
                                     </Grid>
                                 </DataTemplate>

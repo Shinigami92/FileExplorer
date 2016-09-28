@@ -20,5 +20,6 @@ namespace FileExplorer.Models
         public bool IsFile { get { return this.StorageItem.IsOfType(StorageItemTypes.File); } }
         public string Name { get { return this.StorageItem.Name; } }
         public string DateCreated { get { return this.StorageItem.DateCreated.ToString(); } }
+        public string Icon { get { return this.IsFolder ? "\xE8B7" : "\xE7C3"; } }
     }
 }
