@@ -208,5 +208,31 @@ namespace FileExplorer
         {
             FolderUpButton.Label = "";
         }
+
+        private void MenuSplitViewMainLeft_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width <= 640)
+            {
+                MenuSplitViewMainLeft.DisplayMode = SplitViewDisplayMode.CompactOverlay;
+            }
+            else
+            {
+                MenuSplitViewMainLeft.DisplayMode = SplitViewDisplayMode.CompactInline;
+            }
+        }
+
+        private async void RefreshFolderButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.currentFolder != null)
+            {
+                FileItems.Clear();
+                IReadOnlyList<IStorageItem> folderItems = await currentFolder.GetItemsAsync();
+                foreach (IStorageItem folderItem in folderItems)
+                {
+                    FileItems.Add(new FileItem(folderItem));
+                }
+                UpdateCurrentFolderPathPanel();
+            }
+        }
     }
 }

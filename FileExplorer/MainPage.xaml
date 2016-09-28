@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:FileExplorer.Models"
     mc:Ignorable="d" x:Name="MainPageRoot">
-    <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320">
+    <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320" SizeChanged="MenuSplitViewMainLeft_SizeChanged">
         <SplitView.Pane>
             <StackPanel>
                 <Button x:Name="MenuButtonMainLeft" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="48" Background="Transparent" Click="MenuButtonMainLeft_Click"></Button>
@@ -51,17 +51,12 @@
                     <CommandBar.Content>
                         <StackPanel Orientation="Horizontal">
                             <AppBarButton x:Name="FolderUpButton" Icon="Up" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
-                            <StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top">
-                                <!--
-                                <Button Content="C:" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE937;" FontSize="12" Padding="4,4,0,0" VerticalAlignment="Center"/>
-                                <Button Content="Users" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE937;" FontSize="12" Padding="4,4,0,0" VerticalAlignment="Center"/>
-                                <Button Content="Shinigami" FontSize="20" FontWeight="SemiBold" Background="Transparent" VerticalAlignment="Stretch" BorderThickness="0"/>
-                                -->
-                            </StackPanel>
+                            <StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top"/>
                         </StackPanel>
                     </CommandBar.Content>
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton x:Name="RefreshFolderButton" Icon="Refresh" Label="Refresh" Click="RefreshFolderButton_Click" ToolTipService.ToolTip="Refresh" ToolTipService.Placement="Mouse"/>
+                    </CommandBar.PrimaryCommands>
                 </CommandBar>
                 <RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="CommandBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                     <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
