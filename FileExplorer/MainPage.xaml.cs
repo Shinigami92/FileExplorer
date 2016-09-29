@@ -60,7 +60,9 @@ namespace FileExplorer
                 IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
                 foreach (IStorageItem folderItem in folderItems)
                 {
-                    FileItems.Add(new FileItem(folderItem));
+                    FileItem fileItem = new FileItem(folderItem);
+                    await fileItem.FetchProperties();
+                    FileItems.Add(fileItem);
                 }
                 currentFolder = folder;
                 UpdateCurrentFolderPathPanel();
@@ -123,7 +125,9 @@ namespace FileExplorer
             IReadOnlyList<IStorageItem> folderItems = await f.Folder.GetItemsAsync();
             foreach (IStorageItem folderItem in folderItems)
             {
-                FileItems.Add(new FileItem(folderItem));
+                FileItem fileItem = new FileItem(folderItem);
+                await fileItem.FetchProperties();
+                FileItems.Add(fileItem);
             }
             currentFolder = f.Folder;
             UpdateCurrentFolderPathPanel();
@@ -140,7 +144,9 @@ namespace FileExplorer
                     IReadOnlyList<IStorageItem> folderItems = await parentFolder.GetItemsAsync();
                     foreach (IStorageItem folderItem in folderItems)
                     {
-                        FileItems.Add(new FileItem(folderItem));
+                        FileItem fileItem = new FileItem(folderItem);
+                        await fileItem.FetchProperties();
+                        FileItems.Add(fileItem);
                     }
                     currentFolder = parentFolder;
                     UpdateCurrentFolderPathPanel();
@@ -229,9 +235,27 @@ namespace FileExplorer
                 IReadOnlyList<IStorageItem> folderItems = await currentFolder.GetItemsAsync();
                 foreach (IStorageItem folderItem in folderItems)
                 {
-                    FileItems.Add(new FileItem(folderItem));
+                    FileItem fileItem = new FileItem(folderItem);
+                    await fileItem.FetchProperties();
+                    FileItems.Add(fileItem);
                 }
                 UpdateCurrentFolderPathPanel();
+            }
+        }
+
+        private void ToggleViewButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (FileItemsListView.Visibility == Visibility.Visible)
+            {
+                ToggleViewButton.Icon = new SymbolIcon(Symbol.List);
+                FileItemsListView.Visibility = Visibility.Collapsed;
+                FileItemsGridView.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ToggleViewButton.Icon = new SymbolIcon(Symbol.ViewAll);
+                FileItemsListView.Visibility = Visibility.Visible;
+                FileItemsGridView.Visibility = Visibility.Collapsed;
             }
         }
     }
