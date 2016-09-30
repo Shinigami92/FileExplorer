@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +26,10 @@ namespace FileExplorer.Models
         public string DateCreated { get { return this.StorageItem.DateCreated.ToString(); } }
         public string DateModified { get; private set; }
         public ulong Size { get; private set; }
+        public StorageItemThumbnail Thumbnail { get; private set; }
 
-        private static List<string> sizeEndings = new List<string>() { "B", "KB", "MB", "GB", "TB" };
+        private static List<string> SIZE_ENDINGS = new List<string>() { "B", "KB", "MB", "GB", "TB" };
+        private static List<string> IMAGE_FILE_TYPES = new List<string>() { ".jpg", ".png" };
 
         public string ToolTipText
         {
@@ -43,7 +46,7 @@ namespace FileExplorer.Models
                         tmpSize /= 1024;
                         i++;
                     }
-                    result += tmpSize.ToString("0.00") + " " + sizeEndings.ElementAt(i);
+                    result += tmpSize.ToString("0.00") + " " + SIZE_ENDINGS.ElementAt(i);
                 }
                 return result;
             }
@@ -54,6 +57,15 @@ namespace FileExplorer.Models
             BasicProperties properties = await this.StorageItem.GetBasicPropertiesAsync();
             DateModified = properties.DateModified.ToString();
             Size = properties.Size;
+            if (IsFile)
+            {
+                StorageFile storageFile = StorageItem as StorageFile;
+                Debug.WriteLine(storageFile.FileType);
+                if (IMAGE_FILE_TYPES.Contains(storageFile.FileType))
+                {
+                    Thumbnail = await storageFile.GetThumbnailAsync(ThumbnailMode.PicturesView, 64, ThumbnailOptions.ResizeThumbnail);
+                }
+            }
         }
     }
 }
