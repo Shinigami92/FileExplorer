@@ -12,7 +12,7 @@
             <StackPanel>
                 <Button x:Name="MenuButtonMainLeft" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="48" Background="Transparent" Click="MenuButtonMainLeft_Click"></Button>
                 <ListView x:Name="MenuButtonMainAddFolder" ItemClick="MenuButtonMainAddFolder_ItemClick" IsItemClickEnabled="True">
-                    <ListViewItem Padding="0">
+                    <ListViewItem Padding="0" HorizontalContentAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
                             <Button FontFamily="Segoe MDL2 Assets" Content="&#xECC8;" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
                             <TextBlock Text="Add Folder" FontSize="18" VerticalAlignment="Center"></TextBlock>

@@ -92,6 +92,7 @@ namespace FileExplorer
                 Debug.WriteLine("Opened the folder: " + folder.DisplayName);
                 MenuFolderItems.Add(new MenuFolderItem(folder));
             }
+            MenuButtonMainAddFolder.SelectedIndex = -1;
         }
 
         private void MenuListViewItemRemove_Click(object sender, RoutedEventArgs e)
@@ -162,47 +163,67 @@ namespace FileExplorer
             }
         }
 
-        private void UpdateCurrentFolderPathPanel()
+        private async void UpdateCurrentFolderPathPanel()
         {
             if (this.currentFolder != null)
             {
                 CurrentFolderPathPanel.Children.Clear();
-                string path = this.currentFolder.Path;
-                string[] parts = path.Split('\\');
-                int i;
-                Button btn = new Button();
-                btn.Content = parts[0];
-                btn.FontSize = 20;
-                btn.FontWeight = FontWeights.SemiBold;
-                btn.Background = new SolidColorBrush(Colors.Transparent);
-                btn.VerticalAlignment = VerticalAlignment.Stretch;
-                btn.BorderThickness = new Thickness();
-                CurrentFolderPathPanel.Children.Add(btn);
 
-                if (parts.Length > 0 && parts[1].Length != 0)
+                StorageFolder folder = this.currentFolder;
+                List<StorageFolder> parts = new List<StorageFolder>();
+                parts.Add(folder);
+
+                try
                 {
-                    TextBlock tb;
-                    for (i = 1; i < parts.Length; i++)
+                    while ((folder = await folder.GetParentAsync()) != null)
                     {
-                        tb = new TextBlock();
-                        tb.FontFamily = new FontFamily("Segoe MDL2 Assets");
-                        tb.Text = "\xE937";
-                        tb.FontSize = 12;
-                        tb.Padding = new Thickness(4, 4, 0, 0);
-                        tb.VerticalAlignment = VerticalAlignment.Center;
-                        CurrentFolderPathPanel.Children.Add(tb);
-
-                        btn = new Button();
-                        btn.Content = parts[i];
-                        btn.FontSize = 20;
-                        btn.FontWeight = FontWeights.SemiBold;
-                        btn.Background = new SolidColorBrush(Colors.Transparent);
-                        btn.VerticalAlignment = VerticalAlignment.Stretch;
-                        btn.BorderThickness = new Thickness();
-                        CurrentFolderPathPanel.Children.Add(btn);
+                        parts.Add(folder);
                     }
                 }
+                catch (Exception)
+                {
+                    Debug.WriteLine("You don't have access permissions to this parent folder!");
+                }
+
+                parts.Reverse();
+                CurrentFolderPathPanel.Children.Add(BuildCurrentFolderPathButton(parts.ElementAt(0)));
+                for (int i = 1; i < parts.Count; i++)
+                {
+                    CurrentFolderPathPanel.Children.Add(BuildCurrentFolderPathSeperator());
+                    CurrentFolderPathPanel.Children.Add(BuildCurrentFolderPathButton(parts.ElementAt(i)));
+                }
             }
+        }
+
+        private Button BuildCurrentFolderPathButton(StorageFolder folder)
+        {
+            Button btn = new Button();
+            btn.Content = folder.Name.TrimEnd('\\');
+            btn.Tag = folder;
+            btn.FontSize = 20;
+            btn.FontWeight = FontWeights.SemiBold;
+            btn.Background = new SolidColorBrush(Colors.Transparent);
+            btn.VerticalAlignment = VerticalAlignment.Stretch;
+            btn.BorderThickness = new Thickness();
+            btn.Click += NavigateTo_Click;
+            return btn;
+        }
+
+        private void NavigateTo_Click(object sender, RoutedEventArgs e)
+        {
+            this.currentFolder = (e.OriginalSource as Button).Tag as StorageFolder;
+            this.RefreshFolderButton_Click(sender, e);
+        }
+
+        private TextBlock BuildCurrentFolderPathSeperator()
+        {
+            TextBlock tb = new TextBlock();
+            tb.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            tb.Text = "\xE937";
+            tb.FontSize = 12;
+            tb.Padding = new Thickness(4, 4, 0, 0);
+            tb.VerticalAlignment = VerticalAlignment.Center;
+            return tb;
         }
 
         private void CommandBar_Opening(object sender, object e)
