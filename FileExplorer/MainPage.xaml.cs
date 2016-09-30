@@ -53,29 +53,10 @@ namespace FileExplorer
             FileItem fi = e.ClickedItem as FileItem;
             IStorageItem storageItem = fi.StorageItem;
             Debug.WriteLine("[FileListView_ItemClick] Clicked on: " + fi.Name);
+            Debug.WriteLine(fi.ToolTipText);
             if (fi.IsFolder)
             {
-                StorageFolder folder = storageItem as StorageFolder;
-                FileItems.Clear();
-                IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
-                foreach (IStorageItem folderItem in folderItems)
-                {
-                    FileItem fileItem = new FileItem(folderItem);
-                    await fileItem.FetchProperties();
-                    FileItems.Add(fileItem);
-                }
-                currentFolder = folder;
-                UpdateCurrentFolderPathPanel();
-            }
-            else
-            {
-                Debug.WriteLine("Name: " + storageItem.Name);
-                Debug.WriteLine("Path: " + storageItem.Path);
-                Debug.WriteLine("DateCreated: " + storageItem.DateCreated);
-                BasicProperties properties = await storageItem.GetBasicPropertiesAsync();
-                Debug.WriteLine("DateModified: " + properties.DateModified);
-                Debug.WriteLine("ItemDate: " + properties.ItemDate);
-                Debug.WriteLine("Size: " + properties.Size);
+                await NavigateToFolder(storageItem as StorageFolder);
             }
         }
 
@@ -122,16 +103,7 @@ namespace FileExplorer
         {
             MenuFolderItem f = e.ClickedItem as MenuFolderItem;
             Debug.WriteLine("[MenuListViewFolders_ItemClick] Clicked on: " + f.DisplayName);
-            FileItems.Clear();
-            IReadOnlyList<IStorageItem> folderItems = await f.Folder.GetItemsAsync();
-            foreach (IStorageItem folderItem in folderItems)
-            {
-                FileItem fileItem = new FileItem(folderItem);
-                await fileItem.FetchProperties();
-                FileItems.Add(fileItem);
-            }
-            currentFolder = f.Folder;
-            UpdateCurrentFolderPathPanel();
+            await NavigateToFolder(f.Folder);
         }
 
         private async void FolderUpButton_Click(object sender, RoutedEventArgs e)
@@ -139,23 +111,7 @@ namespace FileExplorer
             if (currentFolder != null)
             {
                 StorageFolder parentFolder = await currentFolder.GetParentAsync();
-                if (parentFolder != null)
-                {
-                    FileItems.Clear();
-                    IReadOnlyList<IStorageItem> folderItems = await parentFolder.GetItemsAsync();
-                    foreach (IStorageItem folderItem in folderItems)
-                    {
-                        FileItem fileItem = new FileItem(folderItem);
-                        await fileItem.FetchProperties();
-                        FileItems.Add(fileItem);
-                    }
-                    currentFolder = parentFolder;
-                    UpdateCurrentFolderPathPanel();
-                }
-                else
-                {
-                    Debug.WriteLine("Cant access parent folder");
-                }
+                await NavigateToFolder(parentFolder);
             }
             else
             {
@@ -209,10 +165,9 @@ namespace FileExplorer
             return btn;
         }
 
-        private void NavigateTo_Click(object sender, RoutedEventArgs e)
+        private async void NavigateTo_Click(object sender, RoutedEventArgs e)
         {
-            this.currentFolder = (e.OriginalSource as Button).Tag as StorageFolder;
-            this.RefreshFolderButton_Click(sender, e);
+            await NavigateToFolder((e.OriginalSource as Button).Tag as StorageFolder);
         }
 
         private TextBlock BuildCurrentFolderPathSeperator()
@@ -250,18 +205,28 @@ namespace FileExplorer
 
         private async void RefreshFolderButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.currentFolder != null)
+            await NavigateToFolder(this.currentFolder);
+        }
+
+        private async Task NavigateToFolder(StorageFolder folder)
+        {
+            FileItems.Clear();
+            if (folder != null)
             {
-                FileItems.Clear();
-                IReadOnlyList<IStorageItem> folderItems = await currentFolder.GetItemsAsync();
+                IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
                 foreach (IStorageItem folderItem in folderItems)
                 {
                     FileItem fileItem = new FileItem(folderItem);
                     await fileItem.FetchProperties();
                     FileItems.Add(fileItem);
                 }
-                UpdateCurrentFolderPathPanel();
             }
+            else
+            {
+                Debug.WriteLine("folder was null");
+            }
+            this.currentFolder = folder;
+            UpdateCurrentFolderPathPanel();
         }
 
         private void ToggleViewButton_Click(object sender, RoutedEventArgs e)
