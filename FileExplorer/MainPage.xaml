@@ -29,7 +29,7 @@
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="models:MenuFolderItem">
-                            <StackPanel Orientation="Horizontal" Tag="{x:Bind Folder}" ToolTipService.ToolTip="{x:Bind DisplayName}" ToolTipService.Placement="Mouse">
+                            <StackPanel Orientation="Horizontal" Tag="{x:Bind Folder}" Background="Transparent" ToolTipService.ToolTip="{x:Bind DisplayName}" ToolTipService.Placement="Mouse">
                                 <StackPanel.ContextFlyout>
                                     <MenuFlyout>
                                         <MenuFlyout.Items>
@@ -88,7 +88,7 @@
                             </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
-                                    <Grid Tag="{x:Bind StorageItem}" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+                                    <Grid Tag="{x:Bind StorageItem}" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="36"/>
                                             <ColumnDefinition/>
@@ -108,7 +108,7 @@
                         <GridView ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
-                                    <StackPanel Padding="20" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+                                    <StackPanel Margin="6" Padding="14" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
                                         <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" FontSize="48" Width="92" Height="64" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Stretch" IsHitTestVisible="False"/>
                                         <TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="92" MaxLines="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                                     </StackPanel>
