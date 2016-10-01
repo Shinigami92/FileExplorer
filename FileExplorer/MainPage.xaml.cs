@@ -184,12 +184,12 @@ namespace FileExplorer
 
         private void CommandBar_Opening(object sender, object e)
         {
-            FolderUpButton.Label = "Folder Up";
+            FolderUpButton.LabelPosition = CommandBarLabelPosition.Default;
         }
 
         private void CommandBar_Closing(object sender, object e)
         {
-            FolderUpButton.Label = "";
+            FolderUpButton.LabelPosition = CommandBarLabelPosition.Collapsed;
         }
 
         private void MenuSplitViewMainLeft_SizeChanged(object sender, SizeChangedEventArgs e)

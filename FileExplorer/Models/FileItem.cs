@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.UI.Xaml.Controls;
@@ -35,10 +36,11 @@ namespace FileExplorer.Models
         {
             get
             {
-                string result = Name + "\nCreated: " + DateCreated + "\nModified: " + DateModified;
+                ResourceLoader loader = ResourceLoader.GetForCurrentView();
+                string result = string.Format("{0}\n{1}: {2}\n{3}: {4}", Name, loader.GetString("FileItem_Created"), DateCreated, loader.GetString("FileItem_Modified"), DateModified);
                 if (Size != 0)
                 {
-                    result += "\nSize: ";
+                    result += "\n" + loader.GetString("FileItem_Size") + ": ";
                     double tmpSize = Size;
                     int i = 0;
                     while (tmpSize > 1024)

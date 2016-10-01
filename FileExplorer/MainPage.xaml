@@ -15,7 +15,7 @@
                     <ListViewItem Padding="0" HorizontalContentAlignment="Stretch">
                         <StackPanel Orientation="Horizontal">
                             <Button FontFamily="Segoe MDL2 Assets" Content="&#xECC8;" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
-                            <TextBlock Text="Add Folder" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock x:Uid="MenuButtonMainAddFolder" Text="Add Folder..." FontSize="18" VerticalAlignment="Center"/>
                         </StackPanel>
                     </ListViewItem>
                 </ListView>
@@ -50,13 +50,13 @@
                 <CommandBar x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Opening="CommandBar_Opening" Closing="CommandBar_Closing">
                     <CommandBar.Content>
                         <StackPanel Orientation="Horizontal">
-                            <AppBarButton x:Name="FolderUpButton" Icon="Up" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
+                            <AppBarButton x:Name="FolderUpButton" x:Uid="FolderUpButton" Icon="Up" Label="Folder Up" LabelPosition="Collapsed" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
                             <StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top"/>
                         </StackPanel>
                     </CommandBar.Content>
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton x:Name="RefreshFolderButton" Icon="Refresh" Label="Refresh" Click="RefreshFolderButton_Click" ToolTipService.ToolTip="Refresh" ToolTipService.Placement="Mouse"/>
-                        <AppBarButton x:Name="ToggleViewButton" Icon="List" Label="Toggle View" Click="ToggleViewButton_Click" ToolTipService.ToolTip="Toggle View" ToolTipService.Placement="Mouse"/>
+                        <AppBarButton x:Name="RefreshFolderButton" x:Uid="RefreshFolderButton" Icon="Refresh" Label="Refresh" Click="RefreshFolderButton_Click" ToolTipService.ToolTip="Refresh" ToolTipService.Placement="Mouse"/>
+                        <AppBarButton x:Name="ToggleViewButton" x:Uid="ToggleViewButton" Icon="List" Label="Toggle View" Click="ToggleViewButton_Click" ToolTipService.ToolTip="Toggle View" ToolTipService.Placement="Mouse"/>
                     </CommandBar.PrimaryCommands>
                 </CommandBar>
                 <RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="CommandBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
@@ -76,8 +76,8 @@
                             <RowDefinition Height="48"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
-                        <TextBlock Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="2" Grid.Row="0"></TextBlock>
+                        <TextBlock x:Uid="FileItemsListViewColumnName" Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
+                        <TextBlock x:Uid="FileItemsListViewColumnDateCreated" Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="2" Grid.Row="0"></TextBlock>
                         <ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True" HorizontalContentAlignment="Stretch">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
