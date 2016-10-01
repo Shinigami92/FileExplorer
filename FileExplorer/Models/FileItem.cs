@@ -63,7 +63,7 @@ namespace FileExplorer.Models
                 Debug.WriteLine(storageFile.FileType);
                 if (IMAGE_FILE_TYPES.Contains(storageFile.FileType))
                 {
-                    Thumbnail = await storageFile.GetThumbnailAsync(ThumbnailMode.PicturesView, 64, ThumbnailOptions.ResizeThumbnail);
+                    Thumbnail = await storageFile.GetThumbnailAsync(ThumbnailMode.PicturesView, 110, ThumbnailOptions.UseCurrentScale);
                 }
             }
         }

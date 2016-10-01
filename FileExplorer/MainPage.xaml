@@ -113,11 +113,23 @@
                         <GridView ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
-                                    <StackPanel Margin="6" Padding="14" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
-                                        <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" FontSize="48" Width="92" Height="64" Background="Transparent" VerticalAlignment="Top" HorizontalAlignment="Stretch" IsHitTestVisible="False" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnNullConverter}}"/>
-                                        <Image Width="92" Height="64" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnExistsConverter}}" Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageConverter}}"/>
-                                        <TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="92" MaxLines="2" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
-                                    </StackPanel>
+                                    <Grid Margin="6" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="118"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="78"/>
+                                            <RowDefinition Height="40"/>
+                                        </Grid.RowDefinitions>
+                                        <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" FontSize="48" Width="64" Height="64" Background="Transparent"
+                                                VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                                IsHitTestVisible="False" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnNullConverter}}"
+                                                Grid.Row="0"/>
+                                        <Image Width="110" Height="70" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnExistsConverter}}" Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageConverter}}"
+                                               Grid.Row="0"/>
+                                        <TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="110" MaxLines="2" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+                                                   Grid.Row="1"/>
+                                    </Grid>
                                 </DataTemplate>
                             </GridView.ItemTemplate>
                         </GridView>
