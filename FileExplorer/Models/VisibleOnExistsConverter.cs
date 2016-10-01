@@ -8,7 +8,15 @@ namespace FileExplorer.Models
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return value != null ? Visibility.Visible : Visibility.Collapsed;
+            if (value != null)
+            {
+                if (value.GetType() == typeof(bool) && (bool)value == false)
+                {
+                    return Visibility.Collapsed;
+                }
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

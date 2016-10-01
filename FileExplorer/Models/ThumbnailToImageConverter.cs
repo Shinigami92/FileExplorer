@@ -22,6 +22,7 @@ namespace FileExplorer.Models
                     throw new ArgumentException("What are you trying to convert to here?");
                 }
                 StorageItemThumbnail thumbnail = value as StorageItemThumbnail;
+                thumbnail.Seek(0);
                 image = new BitmapImage();
                 image.SetSource(thumbnail);
             }
