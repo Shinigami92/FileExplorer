@@ -89,6 +89,15 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
                                     <Grid Tag="{x:Bind StorageItem}" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyout.Items>
+                                                    <MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
+                                                    <MenuFlyoutItem Text="Rename" IsEnabled="False"/>
+                                                    <MenuFlyoutItem Text="Remove" IsEnabled="False"/>
+                                                </MenuFlyout.Items>
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="36"/>
                                             <ColumnDefinition/>
@@ -114,6 +123,15 @@
                             <GridView.ItemTemplate>
                                 <DataTemplate x:DataType="models:FileItem">
                                     <Grid Margin="6" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+                                        <Grid.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyout.Items>
+                                                    <MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
+                                                    <MenuFlyoutItem Text="Rename" IsEnabled="False"/>
+                                                    <MenuFlyoutItem Text="Remove" IsEnabled="False"/>
+                                                </MenuFlyout.Items>
+                                            </MenuFlyout>
+                                        </Grid.ContextFlyout>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="118"/>
                                         </Grid.ColumnDefinitions>

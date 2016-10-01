@@ -13,6 +13,7 @@ using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -242,6 +243,28 @@ namespace FileExplorer
                 ToggleViewButton.Icon = new SymbolIcon(Symbol.ViewAll);
                 FileItemsListView.Visibility = Visibility.Visible;
                 FileItemsGridView.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private static LauncherOptions OPEN_WITH_LAUNCHER_OPTIONS = new LauncherOptions() { DisplayApplicationPicker = true };
+        private async void FileItemOpen_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem source = e.OriginalSource as MenuFlyoutItem;
+            IStorageItem storageItem = source.Tag as IStorageItem;
+            Debug.WriteLine("storageItem = " + storageItem);
+            if (storageItem.IsOfType(StorageItemTypes.File))
+            {
+                StorageFile storageFile = storageItem as StorageFile;
+                bool success = await Launcher.LaunchFileAsync(storageFile);
+                if (!success)
+                {
+                    success = await Launcher.LaunchFileAsync(storageFile, OPEN_WITH_LAUNCHER_OPTIONS);
+                }
+                Debug.WriteLineIf(!success, "Launching the file failed");
+            }
+            else
+            {
+                await NavigateToFolder(storageItem as StorageFolder);
             }
         }
     }
