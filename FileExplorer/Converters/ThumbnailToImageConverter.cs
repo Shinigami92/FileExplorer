@@ -4,13 +4,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Converters
 {
     public class ThumbnailToImageConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            BitmapImage image = null;
             if (value != null)
             {
                 if (value.GetType() != typeof(StorageItemThumbnail))
@@ -21,12 +20,13 @@ namespace FileExplorer.Models
                 {
                     throw new ArgumentException("What are you trying to convert to here?");
                 }
-                StorageItemThumbnail thumbnail = value as StorageItemThumbnail;
+                var thumbnail = value as StorageItemThumbnail;
                 thumbnail.Seek(0);
-                image = new BitmapImage();
+                var image = new BitmapImage();
                 image.SetSource(thumbnail);
+                return image;
             }
-            return image;
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

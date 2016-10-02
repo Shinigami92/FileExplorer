@@ -51,8 +51,8 @@ namespace FileExplorer
 
         private async void FileListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            FileItem fi = e.ClickedItem as FileItem;
-            IStorageItem storageItem = fi.StorageItem;
+            var fi = e.ClickedItem as FileItem;
+            var storageItem = fi.StorageItem;
             Debug.WriteLine("[FileListView_ItemClick] Clicked on: " + fi.Name);
             Debug.WriteLine(fi.ToolTipText);
             if (fi.IsFolder)
@@ -63,11 +63,11 @@ namespace FileExplorer
 
         private async void MenuButtonMainAddFolder_ItemClick(object sender, ItemClickEventArgs e)
         {
-            FolderPicker folderPicker = new FolderPicker();
+            var folderPicker = new FolderPicker();
             folderPicker.FileTypeFilter.Add("*");
             folderPicker.SuggestedStartLocation = PickerLocationId.ComputerFolder;
             folderPicker.ViewMode = PickerViewMode.List;
-            StorageFolder folder = await folderPicker.PickSingleFolderAsync();
+            var folder = await folderPicker.PickSingleFolderAsync();
             if (folder != null)
             {
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
@@ -79,11 +79,11 @@ namespace FileExplorer
 
         private void MenuListViewItemRemove_Click(object sender, RoutedEventArgs e)
         {
-            MenuFlyoutItem source = e.OriginalSource as MenuFlyoutItem;
+            var source = e.OriginalSource as MenuFlyoutItem;
             Debug.WriteLine("source.Tag: " + source.Tag);
-            StorageFolder storageFolder = source.Tag as StorageFolder;
-            MenuFolderItem f = MenuFolderItems.ToList().Find(item => item.Folder == storageFolder);
-            AccessListEntry entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == f.Folder.Path);
+            var storageFolder = source.Tag as StorageFolder;
+            var f = MenuFolderItems.ToList().Find(item => item.Folder == storageFolder);
+            var entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == f.Folder.Path);
             StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
             MenuFolderItems.Remove(f);
             Debug.WriteLine("Removed FolderItem with Name: " + entry.Metadata + " Token: " + entry.Token);
@@ -91,9 +91,9 @@ namespace FileExplorer
 
         private async void MenuListViewFolders_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (AccessListEntry entry in StorageApplicationPermissions.FutureAccessList.Entries.OrderBy(item => item.Metadata))
+            foreach (var entry in StorageApplicationPermissions.FutureAccessList.Entries.OrderBy(item => item.Metadata))
             {
-                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(entry.Metadata);
+                var folder = await StorageFolder.GetFolderFromPathAsync(entry.Metadata);
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
                 Debug.WriteLine("Opened the folder: " + folder.DisplayName);
                 MenuFolderItems.Add(new MenuFolderItem(folder));
@@ -102,16 +102,16 @@ namespace FileExplorer
 
         private async void MenuListViewFolders_ItemClick(object sender, ItemClickEventArgs e)
         {
-            MenuFolderItem f = e.ClickedItem as MenuFolderItem;
+            var f = e.ClickedItem as MenuFolderItem;
             Debug.WriteLine("[MenuListViewFolders_ItemClick] Clicked on: " + f.DisplayName);
             await NavigateToFolder(f.Folder);
         }
 
         private async void FolderUpButton_Click(object sender, RoutedEventArgs e)
         {
-            if (currentFolder != null)
+            if (this.currentFolder != null)
             {
-                StorageFolder parentFolder = await currentFolder.GetParentAsync();
+                var parentFolder = await this.currentFolder.GetParentAsync();
                 await NavigateToFolder(parentFolder);
             }
             else
@@ -126,8 +126,8 @@ namespace FileExplorer
             {
                 CurrentFolderPathPanel.Children.Clear();
 
-                StorageFolder folder = this.currentFolder;
-                List<StorageFolder> parts = new List<StorageFolder>();
+                var folder = this.currentFolder;
+                var parts = new List<StorageFolder>();
                 parts.Add(folder);
 
                 try
@@ -154,7 +154,7 @@ namespace FileExplorer
 
         private Button BuildCurrentFolderPathButton(StorageFolder folder)
         {
-            Button btn = new Button();
+            var btn = new Button();
             btn.Content = folder.Name.TrimEnd('\\');
             btn.Tag = folder;
             btn.FontSize = 20;
@@ -173,7 +173,7 @@ namespace FileExplorer
 
         private TextBlock BuildCurrentFolderPathSeperator()
         {
-            TextBlock tb = new TextBlock();
+            var tb = new TextBlock();
             tb.FontFamily = new FontFamily("Segoe MDL2 Assets");
             tb.Text = "\xE937";
             tb.FontSize = 12;
@@ -214,10 +214,10 @@ namespace FileExplorer
             FileItems.Clear();
             if (folder != null)
             {
-                IReadOnlyList<IStorageItem> folderItems = await folder.GetItemsAsync();
-                foreach (IStorageItem folderItem in folderItems)
+                var folderItems = await folder.GetItemsAsync();
+                foreach (var folderItem in folderItems)
                 {
-                    FileItem fileItem = new FileItem(folderItem);
+                    var fileItem = new FileItem(folderItem);
                     await fileItem.FetchProperties();
                     FileItems.Add(fileItem);
                 }
@@ -246,19 +246,19 @@ namespace FileExplorer
             }
         }
 
-        private static LauncherOptions OPEN_WITH_LAUNCHER_OPTIONS = new LauncherOptions() { DisplayApplicationPicker = true };
+        private static LauncherOptions OpenWithLaucherOptions = new LauncherOptions() { DisplayApplicationPicker = true };
         private async void FileItemOpen_Click(object sender, RoutedEventArgs e)
         {
-            MenuFlyoutItem source = e.OriginalSource as MenuFlyoutItem;
-            IStorageItem storageItem = source.Tag as IStorageItem;
+            var source = e.OriginalSource as MenuFlyoutItem;
+            var storageItem = source.Tag as IStorageItem;
             Debug.WriteLine("storageItem = " + storageItem);
             if (storageItem.IsOfType(StorageItemTypes.File))
             {
-                StorageFile storageFile = storageItem as StorageFile;
+                var storageFile = storageItem as StorageFile;
                 bool success = await Launcher.LaunchFileAsync(storageFile);
                 if (!success)
                 {
-                    success = await Launcher.LaunchFileAsync(storageFile, OPEN_WITH_LAUNCHER_OPTIONS);
+                    success = await Launcher.LaunchFileAsync(storageFile, OpenWithLaucherOptions);
                 }
                 Debug.WriteLineIf(!success, "Launching the file failed");
             }

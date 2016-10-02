@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:FileExplorer.Models"
+    xmlns:converters="using:FileExplorer.Converters"
     mc:Ignorable="d" x:Name="MainPageRoot">
     <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320" SizeChanged="MenuSplitViewMainLeft_SizeChanged">
         <SplitView.Pane>
@@ -115,9 +116,9 @@
                     </Grid>
                     <Grid x:Name="FileItemsGridView" Visibility="Visible" RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <Grid.Resources>
-                            <models:VisibleOnNullConverter x:Key="VisibleOnNullConverter"/>
-                            <models:VisibleOnExistsConverter x:Key="VisibleOnExistsConverter"/>
-                            <models:ThumbnailToImageConverter x:Key="ThumbnailToImageConverter"/>
+                            <converters:VisibleOnNullConverter x:Key="VisibleOnNullConverter"/>
+                            <converters:VisibleOnExistsConverter x:Key="VisibleOnExistsConverter"/>
+                            <converters:ThumbnailToImageConverter x:Key="ThumbnailToImageConverter"/>
                         </Grid.Resources>
                         <GridView ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
                             <GridView.ItemTemplate>

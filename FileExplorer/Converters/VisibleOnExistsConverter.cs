@@ -2,9 +2,9 @@
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace FileExplorer.Models
+namespace FileExplorer.Converters
 {
-    public class VisibleOnNullConverter : IValueConverter
+    public class VisibleOnExistsConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -12,11 +12,11 @@ namespace FileExplorer.Models
             {
                 if (value.GetType() == typeof(bool) && (bool)value == false)
                 {
-                    return Visibility.Visible;
+                    return Visibility.Collapsed;
                 }
-                return Visibility.Collapsed;
+                return Visibility.Visible;
             }
-            return Visibility.Visible;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
