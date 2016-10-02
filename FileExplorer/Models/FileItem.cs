@@ -11,15 +11,15 @@ namespace FileExplorer.Models
 {
     public class FileItem
     {
-        private static List<string> SizeEndings = new List<string>() { "B", "KB", "MB", "GB", "TB" };
-        private static List<string> ImageFileTypes = new List<string>() { ".jpg", ".png" };
+        private static readonly IReadOnlyList<string> SizeEndings = new List<string>() { "B", "KB", "MB", "GB", "TB", "PB", "EB" };
+        private static readonly IReadOnlyList<string> ImageFileTypes = new List<string>() { ".jpg", ".png", ".gif", ".bmp" };
 
         public IStorageItem StorageItem { get; set; }
-        public bool IsFolder { get { return this.StorageItem.IsOfType(StorageItemTypes.Folder); } }
-        public bool IsFile { get { return this.StorageItem.IsOfType(StorageItemTypes.File); } }
-        public string Name { get { return this.StorageItem.Name; } }
-        public string Icon { get { return this.IsFolder ? "\xE8B7" : "\xE7C3"; } }
-        public string DateCreated { get { return this.StorageItem.DateCreated.ToString(); } }
+        public bool IsFolder { get { return StorageItem.IsOfType(StorageItemTypes.Folder); } }
+        public bool IsFile { get { return StorageItem.IsOfType(StorageItemTypes.File); } }
+        public string Name { get { return StorageItem.Name; } }
+        public string Icon { get { return IsFolder ? "\xE8B7" : "\xE7C3"; } }
+        public string DateCreated { get { return StorageItem.DateCreated.ToString(); } }
         public string DateModified { get; private set; }
         public ulong Size { get; private set; }
         public StorageItemThumbnail Thumbnail { get; private set; }
@@ -47,19 +47,20 @@ namespace FileExplorer.Models
 
         public FileItem(IStorageItem storageItem)
         {
-            this.StorageItem = storageItem;
+            StorageItem = storageItem;
         }
 
         public async Task FetchProperties()
         {
-            var properties = await this.StorageItem.GetBasicPropertiesAsync();
+            var properties = await StorageItem.GetBasicPropertiesAsync();
             DateModified = properties.DateModified.ToString();
             Size = properties.Size;
             if (IsFile)
             {
                 var storageFile = StorageItem as StorageFile;
-                Debug.WriteLine(storageFile.FileType);
-                if (ImageFileTypes.Contains(storageFile.FileType))
+                var fileType = storageFile.FileType.ToLower();
+                Debug.WriteLine(fileType);
+                if (ImageFileTypes.Contains(fileType))
                 {
                     Thumbnail = await storageFile.GetThumbnailAsync(ThumbnailMode.PicturesView, 110, ThumbnailOptions.UseCurrentScale);
                 }

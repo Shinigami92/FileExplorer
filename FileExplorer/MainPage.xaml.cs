@@ -246,7 +246,7 @@ namespace FileExplorer
             }
         }
 
-        private static LauncherOptions OpenWithLaucherOptions = new LauncherOptions() { DisplayApplicationPicker = true };
+        private static readonly LauncherOptions OpenWithLaucherOptions = new LauncherOptions() { DisplayApplicationPicker = true };
         private async void FileItemOpen_Click(object sender, RoutedEventArgs e)
         {
             var source = e.OriginalSource as MenuFlyoutItem;
