@@ -31,7 +31,7 @@ namespace FileExplorer
         public MainPage()
         {
             this.InitializeComponent();
-            StorageApplicationPermissions.FutureAccessList.Entries.ToList().ForEach(e => Debug.WriteLine("Metadata: " + e.Metadata + " Token: " + e.Token));
+            StorageApplicationPermissions.FutureAccessList.Entries.ToList().ForEach(e => Debug.WriteLine($"Metadata: {e.Metadata} Token: {e.Token}"));
             //StorageApplicationPermissions.FutureAccessList.Clear();
         }
 
@@ -44,7 +44,7 @@ namespace FileExplorer
         {
             var fi = e.ClickedItem as FileItem;
             var storageItem = fi.StorageItem;
-            Debug.WriteLine("[FileListView_ItemClick] Clicked on: " + fi.Name);
+            Debug.WriteLine($"Clicked on: {fi.Name}");
             Debug.WriteLine(fi.ToolTipText);
             if (fi.IsFolder)
             {
@@ -62,7 +62,7 @@ namespace FileExplorer
             if (folder != null)
             {
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
-                Debug.WriteLine("Opened the folder: " + folder.DisplayName);
+                Debug.WriteLine($"Opened the folder: {folder.DisplayName}");
                 MenuFolderItems.Add(new MenuFolderItem(folder));
             }
             MenuButtonMainAddFolder.SelectedIndex = -1;
@@ -71,13 +71,13 @@ namespace FileExplorer
         private void MenuListViewItemRemove_Click(object sender, RoutedEventArgs e)
         {
             var source = e.OriginalSource as MenuFlyoutItem;
-            Debug.WriteLine("source.Tag: " + source.Tag);
+            Debug.WriteLine($"source.Tag: {source.Tag}");
             var storageFolder = source.Tag as StorageFolder;
             var f = MenuFolderItems.ToList().Find(item => item.Folder == storageFolder);
             var entry = StorageApplicationPermissions.FutureAccessList.Entries.ToList().Find(item => item.Metadata == f.Folder.Path);
             StorageApplicationPermissions.FutureAccessList.Remove(entry.Token);
             MenuFolderItems.Remove(f);
-            Debug.WriteLine("Removed FolderItem with Name: " + entry.Metadata + " Token: " + entry.Token);
+            Debug.WriteLine($"Removed FolderItem with Name: {entry.Metadata} Token: {entry.Token}");
         }
 
         private async void MenuListViewFolders_Loaded(object sender, RoutedEventArgs e)
@@ -86,7 +86,7 @@ namespace FileExplorer
             {
                 var folder = await StorageFolder.GetFolderFromPathAsync(entry.Metadata);
                 StorageApplicationPermissions.FutureAccessList.Add(folder, folder.Path);
-                Debug.WriteLine("Opened the folder: " + folder.DisplayName);
+                Debug.WriteLine($"Opened the folder: {folder.DisplayName}");
                 MenuFolderItems.Add(new MenuFolderItem(folder));
             }
         }
@@ -94,7 +94,7 @@ namespace FileExplorer
         private async void MenuListViewFolders_ItemClick(object sender, ItemClickEventArgs e)
         {
             var f = e.ClickedItem as MenuFolderItem;
-            Debug.WriteLine("[MenuListViewFolders_ItemClick] Clicked on: " + f.DisplayName);
+            Debug.WriteLine($"Clicked on: {f.DisplayName}");
             await NavigateToFolder(f.Folder);
         }
 
@@ -118,8 +118,7 @@ namespace FileExplorer
                 CurrentFolderPathPanel.Children.Clear();
 
                 var folder = this.currentFolder;
-                var parts = new List<StorageFolder>();
-                parts.Add(folder);
+                var parts = new List<StorageFolder> { folder };
 
                 try
                 {
@@ -145,14 +144,16 @@ namespace FileExplorer
 
         private Button BuildCurrentFolderPathButton(StorageFolder folder)
         {
-            var btn = new Button();
-            btn.Content = folder.Name.TrimEnd('\\');
-            btn.Tag = folder;
-            btn.FontSize = 20;
-            btn.FontWeight = FontWeights.SemiBold;
-            btn.Background = new SolidColorBrush(Colors.Transparent);
-            btn.VerticalAlignment = VerticalAlignment.Stretch;
-            btn.BorderThickness = new Thickness();
+            var btn = new Button
+            {
+                Content = folder.Name.TrimEnd('\\'),
+                Tag = folder,
+                FontSize = 20,
+                FontWeight = FontWeights.SemiBold,
+                Background = new SolidColorBrush(Colors.Transparent),
+                VerticalAlignment = VerticalAlignment.Stretch,
+                BorderThickness = new Thickness()
+            };
             btn.Click += NavigateTo_Click;
             return btn;
         }
@@ -164,12 +165,14 @@ namespace FileExplorer
 
         private TextBlock BuildCurrentFolderPathSeperator()
         {
-            var tb = new TextBlock();
-            tb.FontFamily = new FontFamily("Segoe MDL2 Assets");
-            tb.Text = "\xE937";
-            tb.FontSize = 12;
-            tb.Padding = new Thickness(4, 4, 0, 0);
-            tb.VerticalAlignment = VerticalAlignment.Center;
+            var tb = new TextBlock
+            {
+                FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                Text = "\xE937",
+                FontSize = 12,
+                Padding = new Thickness(4, 4, 0, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
             return tb;
         }
 
@@ -242,7 +245,7 @@ namespace FileExplorer
         {
             var source = e.OriginalSource as MenuFlyoutItem;
             var storageItem = source.Tag as IStorageItem;
-            Debug.WriteLine("storageItem = " + storageItem);
+            Debug.WriteLine($"storageItem = {storageItem}");
             if (storageItem.IsOfType(StorageItemTypes.File))
             {
                 var storageFile = storageItem as StorageFile;

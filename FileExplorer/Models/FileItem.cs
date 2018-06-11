@@ -28,10 +28,10 @@ namespace FileExplorer.Models
             get
             {
                 var loader = ResourceLoader.GetForCurrentView();
-                string result = string.Format("{0}\n{1}: {2}\n{3}: {4}", Name, loader.GetString("FileItem_Created"), DateCreated, loader.GetString("FileItem_Modified"), DateModified);
+                string result = $"{Name}\n{loader.GetString("FileItem_Created")}: {DateCreated}\n{loader.GetString("FileItem_Modified")}: {DateModified}";
                 if (Size != 0)
                 {
-                    result += "\n" + loader.GetString("FileItem_Size") + ": ";
+                    result += $"\n{loader.GetString("FileItem_Size")}: ";
                     double tmpSize = Size;
                     int i = 0;
                     while (tmpSize > 1024)
@@ -39,7 +39,7 @@ namespace FileExplorer.Models
                         tmpSize /= 1024;
                         i++;
                     }
-                    result += tmpSize.ToString("0.00") + " " + SizeEndings.ElementAt(i);
+                    result += $"{tmpSize.ToString("0.00")} {SizeEndings.ElementAt(i)}";
                 }
                 return result;
             }
