@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="b535cc57-f560-428b-9de4-b3df65241d65" Publisher="CN=Shinigami" Version="0.15.16276.0" />
-  <mp:PhoneIdentity PhoneProductId="b535cc57-f560-428b-9de4-b3df65241d65" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="402b6149-1adf-4994-abc9-504111b3b972" Publisher="CN=Shinigami" Version="0.15.18162.0" />
+  <mp:PhoneIdentity PhoneProductId="402b6149-1adf-4994-abc9-504111b3b972" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>FileExplorer</DisplayName>
     <PublisherDisplayName>Shinigami</PublisherDisplayName>
@@ -23,7 +23,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="musicLibrary" />
     <uap:Capability Name="videosLibrary" />

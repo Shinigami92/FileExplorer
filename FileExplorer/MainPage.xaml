@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:FileExplorer.Models"
     xmlns:converters="using:FileExplorer.Converters"
-    mc:Ignorable="d" x:Name="MainPageRoot">
+    mc:Ignorable="d" x:Name="MainPageRoot"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320" SizeChanged="MenuSplitViewMainLeft_SizeChanged">
         <SplitView.Pane>
             <StackPanel>
