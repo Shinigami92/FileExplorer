@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="FileExplorer.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,164 +9,164 @@
     xmlns:converters="using:FileExplorer.Converters"
     mc:Ignorable="d" x:Name="MainPageRoot"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    <SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320" SizeChanged="MenuSplitViewMainLeft_SizeChanged">
-        <SplitView.Pane>
-            <StackPanel>
-                <Button x:Name="MenuButtonMainLeft" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="48" Background="Transparent" Click="MenuButtonMainLeft_Click"></Button>
-                <ListView x:Name="MenuButtonMainAddFolder" ItemClick="MenuButtonMainAddFolder_ItemClick" IsItemClickEnabled="True">
-                    <ListViewItem Padding="0" HorizontalContentAlignment="Stretch">
-                        <StackPanel Orientation="Horizontal">
-                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xECC8;" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
-                            <TextBlock x:Uid="MenuButtonMainAddFolder" Text="Add Folder..." FontSize="18" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </ListViewItem>
-                </ListView>
-                <ListView x:Name="MenuListViewFolders" ItemsSource="{x:Bind MenuFolderItems}" ItemClick="MenuListViewFolders_ItemClick" Loaded="MenuListViewFolders_Loaded" IsItemClickEnabled="True">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="Padding" Value="0"/>
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="models:MenuFolderItem">
-                            <StackPanel Orientation="Horizontal" Tag="{x:Bind Folder}" Background="Transparent" ToolTipService.ToolTip="{x:Bind DisplayName}" ToolTipService.Placement="Mouse">
-                                <StackPanel.ContextFlyout>
-                                    <MenuFlyout>
-                                        <MenuFlyout.Items>
-                                            <MenuFlyoutItem Text="Remove" Click="MenuListViewItemRemove_Click" Tag="{x:Bind Folder}"/>
-                                        </MenuFlyout.Items>
-                                    </MenuFlyout>
-                                </StackPanel.ContextFlyout>
-                                <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
-                                <TextBlock Text="{x:Bind DisplayName}" FontSize="18" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackPanel>
-        </SplitView.Pane>
-        <SplitView.Content>
-            <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <CommandBar x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Opening="CommandBar_Opening" Closing="CommandBar_Closing">
-                    <CommandBar.Content>
-                        <StackPanel Orientation="Horizontal">
-                            <AppBarButton x:Name="FolderUpButton" x:Uid="FolderUpButton" Icon="Up" Label="Folder Up" LabelPosition="Collapsed" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
-                            <StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top"/>
-                        </StackPanel>
-                    </CommandBar.Content>
-                    <CommandBar.PrimaryCommands>
-                        <AppBarButton x:Name="RefreshFolderButton" x:Uid="RefreshFolderButton" Icon="Refresh" Label="Refresh" Click="RefreshFolderButton_Click" ToolTipService.ToolTip="Refresh" ToolTipService.Placement="Mouse"/>
-                        <AppBarButton x:Name="ToggleViewButton" x:Uid="ToggleViewButton" Icon="List" Label="Toggle View" Click="ToggleViewButton_Click" ToolTipService.ToolTip="Toggle View" ToolTipService.Placement="Mouse"/>
-                    </CommandBar.PrimaryCommands>
-                </CommandBar>
-                <RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="CommandBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <StackPanel x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <TextBlock Text="Sort by:" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
-                        <ComboBox VerticalAlignment="Center" Width="100" SelectedIndex="0">
-                            <ComboBoxItem x:Name="SortByComboBoxItemName" Content="Name"></ComboBoxItem>
-                        </ComboBox>
-                    </StackPanel>
-                    <Grid x:Name="FileItemsListView" Visibility="Collapsed" RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="36"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="220"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="48"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <TextBlock x:Uid="FileItemsListViewColumnName" Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
-                        <TextBlock x:Uid="FileItemsListViewColumnDateCreated" Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="2" Grid.Row="0"></TextBlock>
-                        <ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True" HorizontalContentAlignment="Stretch">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                    <Setter Property="Padding" Value="0"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.ItemTemplate>
-                                <DataTemplate x:DataType="models:FileItem">
-                                    <Grid Tag="{x:Bind StorageItem}" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
-                                        <Grid.ContextFlyout>
-                                            <MenuFlyout>
-                                                <MenuFlyout.Items>
-                                                    <MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
-                                                    <MenuFlyoutItem Text="Rename" IsEnabled="False"/>
-                                                    <MenuFlyoutItem Text="Remove" IsEnabled="False"/>
-                                                </MenuFlyout.Items>
-                                            </MenuFlyout>
-                                        </Grid.ContextFlyout>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="36"/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="220"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.Children>
-                                            <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Height="36" Width="36" Background="Transparent" VerticalAlignment="Stretch" Grid.Column="0" IsHitTestVisible="False"/>
-                                            <TextBlock Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind DateCreated}" Margin="8,0" VerticalAlignment="Center" Grid.Column="2"/>
-                                        </Grid.Children>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </Grid>
-                    <Grid x:Name="FileItemsGridView" Visibility="Visible" RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                        <Grid.Resources>
-                            <converters:VisibleOnNullConverter x:Key="VisibleOnNullConverter"/>
-                            <converters:VisibleOnExistsConverter x:Key="VisibleOnExistsConverter"/>
-                            <converters:ThumbnailToImageConverter x:Key="ThumbnailToImageConverter"/>
-                        </Grid.Resources>
-                        <GridView ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
-                            <GridView.ItemTemplate>
-                                <DataTemplate x:DataType="models:FileItem">
-                                    <Grid Margin="6" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
-                                        <Grid.ContextFlyout>
-                                            <MenuFlyout>
-                                                <MenuFlyout.Items>
-                                                    <MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
-                                                    <MenuFlyoutItem Text="Rename" IsEnabled="False"/>
-                                                    <MenuFlyoutItem Text="Remove" IsEnabled="False"/>
-                                                </MenuFlyout.Items>
-                                            </MenuFlyout>
-                                        </Grid.ContextFlyout>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="118"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="78"/>
-                                            <RowDefinition Height="40"/>
-                                        </Grid.RowDefinitions>
-                                        <Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" FontSize="48" Width="64" Height="64" Background="Transparent"
+	<SplitView x:Name="MenuSplitViewMainLeft" DisplayMode="CompactInline" IsPaneOpen="True" CompactPaneLength="48" OpenPaneLength="320" SizeChanged="MenuSplitViewMainLeft_SizeChanged">
+		<SplitView.Pane>
+			<StackPanel>
+				<Button x:Name="MenuButtonMainLeft" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Width="48" Height="48" Background="Transparent" Click="MenuButtonMainLeft_Click"></Button>
+				<ListView x:Name="MenuButtonMainAddFolder" ItemClick="MenuButtonMainAddFolder_ItemClick" IsItemClickEnabled="True">
+					<ListViewItem Padding="0" HorizontalContentAlignment="Stretch">
+						<StackPanel Orientation="Horizontal">
+							<Button FontFamily="Segoe MDL2 Assets" Content="&#xECC8;" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
+							<TextBlock x:Uid="MenuButtonMainAddFolder" Text="Add Folder..." FontSize="18" VerticalAlignment="Center"/>
+						</StackPanel>
+					</ListViewItem>
+				</ListView>
+				<ListView x:Name="MenuListViewFolders" ItemsSource="{x:Bind MenuFolderItems}" ItemClick="MenuListViewFolders_ItemClick" Loaded="MenuListViewFolders_Loaded" IsItemClickEnabled="True">
+					<ListView.ItemContainerStyle>
+						<Style TargetType="ListViewItem">
+							<Setter Property="Padding" Value="0"/>
+							<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+							<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+						</Style>
+					</ListView.ItemContainerStyle>
+					<ListView.ItemTemplate>
+						<DataTemplate x:DataType="models:MenuFolderItem">
+							<StackPanel Orientation="Horizontal" Tag="{x:Bind Folder}" Background="Transparent" ToolTipService.ToolTip="{x:Bind DisplayName}" ToolTipService.Placement="Mouse">
+								<StackPanel.ContextFlyout>
+									<MenuFlyout>
+										<MenuFlyout.Items>
+											<MenuFlyoutItem Text="Remove" Click="MenuListViewItemRemove_Click" Tag="{x:Bind Folder}"/>
+										</MenuFlyout.Items>
+									</MenuFlyout>
+								</StackPanel.ContextFlyout>
+								<Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Width="48" Height="48" Background="Transparent" IsHitTestVisible="False"/>
+								<TextBlock Text="{x:Bind DisplayName}" FontSize="18" VerticalAlignment="Center"/>
+							</StackPanel>
+						</DataTemplate>
+					</ListView.ItemTemplate>
+				</ListView>
+			</StackPanel>
+		</SplitView.Pane>
+		<SplitView.Content>
+			<RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+				<CommandBar x:Name="CommandBar" RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" Opening="CommandBar_Opening" Closing="CommandBar_Closing">
+					<CommandBar.Content>
+						<StackPanel Orientation="Horizontal">
+							<AppBarButton x:Name="FolderUpButton" x:Uid="FolderUpButton" Icon="Up" Label="Folder Up" LabelPosition="Collapsed" Click="FolderUpButton_Click" ToolTipService.ToolTip="Folder Up" ToolTipService.Placement="Mouse"/>
+							<StackPanel x:Name="CurrentFolderPathPanel" Orientation="Horizontal" Height="48" VerticalAlignment="Top"/>
+						</StackPanel>
+					</CommandBar.Content>
+					<CommandBar.PrimaryCommands>
+						<AppBarButton x:Name="RefreshFolderButton" x:Uid="RefreshFolderButton" Icon="Refresh" Label="Refresh" Click="RefreshFolderButton_Click" ToolTipService.ToolTip="Refresh" ToolTipService.Placement="Mouse"/>
+						<AppBarButton x:Name="ToggleViewButton" x:Uid="ToggleViewButton" Icon="List" Label="Toggle View" Click="ToggleViewButton_Click" ToolTipService.ToolTip="Toggle View" ToolTipService.Placement="Mouse"/>
+					</CommandBar.PrimaryCommands>
+				</CommandBar>
+				<RelativePanel x:Name="FolderViewPanel" RelativePanel.Below="CommandBar" RelativePanel.Above="Footer" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+					<StackPanel x:Name="MainStackPanel" Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+						<TextBlock Text="Sort by:" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+						<ComboBox VerticalAlignment="Center" Width="100" SelectedIndex="0">
+							<ComboBoxItem x:Name="SortByComboBoxItemName" Content="Name"></ComboBoxItem>
+						</ComboBox>
+					</StackPanel>
+					<Grid x:Name="FileItemsListView" Visibility="Collapsed" RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="36"/>
+							<ColumnDefinition/>
+							<ColumnDefinition Width="220"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="48"/>
+							<RowDefinition/>
+						</Grid.RowDefinitions>
+						<TextBlock x:Uid="FileItemsListViewColumnName" Text="Name" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="1" Grid.Row="0"></TextBlock>
+						<TextBlock x:Uid="FileItemsListViewColumnDateCreated" Text="Date Created" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" Grid.Column="2" Grid.Row="0"></TextBlock>
+						<ListView x:Name="FileListView" ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True" HorizontalContentAlignment="Stretch">
+							<ListView.ItemContainerStyle>
+								<Style TargetType="ListViewItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+									<Setter Property="VerticalContentAlignment" Value="Center"/>
+									<Setter Property="Padding" Value="0"/>
+								</Style>
+							</ListView.ItemContainerStyle>
+							<ListView.ItemTemplate>
+								<DataTemplate x:DataType="models:FileItem">
+									<Grid Tag="{x:Bind StorageItem}" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+										<Grid.ContextFlyout>
+											<MenuFlyout>
+												<MenuFlyout.Items>
+													<MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
+													<MenuFlyoutItem Text="Rename" IsEnabled="False"/>
+													<MenuFlyoutItem Text="Remove" IsEnabled="False"/>
+												</MenuFlyout.Items>
+											</MenuFlyout>
+										</Grid.ContextFlyout>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="36"/>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="220"/>
+										</Grid.ColumnDefinitions>
+										<Grid.Children>
+											<Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" Height="36" Width="36" Background="Transparent" VerticalAlignment="Stretch" Grid.Column="0" IsHitTestVisible="False"/>
+											<TextBlock Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" Grid.Column="1"/>
+											<TextBlock Text="{x:Bind DateCreated}" Margin="8,0" VerticalAlignment="Center" Grid.Column="2"/>
+										</Grid.Children>
+									</Grid>
+								</DataTemplate>
+							</ListView.ItemTemplate>
+						</ListView>
+					</Grid>
+					<Grid x:Name="FileItemsGridView" Visibility="Visible" RelativePanel.Below="MainStackPanel" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+						<Grid.Resources>
+							<converters:VisibleOnNullConverter x:Key="VisibleOnNullConverter"/>
+							<converters:VisibleOnExistsConverter x:Key="VisibleOnExistsConverter"/>
+							<converters:ThumbnailToImageConverter x:Key="ThumbnailToImageConverter"/>
+						</Grid.Resources>
+						<GridView ItemsSource="{x:Bind FileItems}" SelectionMode="Extended" ItemClick="FileListView_ItemClick" IsItemClickEnabled="True">
+							<GridView.ItemTemplate>
+								<DataTemplate x:DataType="models:FileItem">
+									<Grid Margin="6" Background="Transparent" ToolTipService.ToolTip="{x:Bind ToolTipText}" ToolTipService.Placement="Mouse">
+										<Grid.ContextFlyout>
+											<MenuFlyout>
+												<MenuFlyout.Items>
+													<MenuFlyoutItem Text="Open" Click="FileItemOpen_Click" Tag="{x:Bind StorageItem}"/>
+													<MenuFlyoutItem Text="Rename" IsEnabled="False"/>
+													<MenuFlyoutItem Text="Remove" IsEnabled="False"/>
+												</MenuFlyout.Items>
+											</MenuFlyout>
+										</Grid.ContextFlyout>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="118"/>
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="78"/>
+											<RowDefinition Height="40"/>
+										</Grid.RowDefinitions>
+										<Button FontFamily="Segoe MDL2 Assets" Content="{x:Bind Icon}" FontSize="48" Width="64" Height="64" Background="Transparent"
                                                 VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
                                                 IsHitTestVisible="False" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnNullConverter}}"
                                                 Grid.Row="0"/>
-                                        <Image Width="110" Height="70" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnExistsConverter}}" Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageConverter}}"
+										<Image Width="110" Height="70" Visibility="{Binding Thumbnail, Converter={StaticResource VisibleOnExistsConverter}}" Source="{Binding Thumbnail, Converter={StaticResource ThumbnailToImageConverter}}"
                                                Grid.Row="0"/>
-                                        <TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="110" MaxLines="2" VerticalAlignment="Top" HorizontalAlignment="Stretch"
+										<TextBlock Text="{x:Bind Name}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="110" MaxLines="2" VerticalAlignment="Top" HorizontalAlignment="Stretch"
                                                    Grid.Row="1"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
-                    </Grid>
-                </RelativePanel>
-                <RelativePanel x:Name="Footer" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
-                    <StackPanel Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True">
-                        <TextBlock Text="Home" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
-                        <TextBlock Text="Share" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
-                        <TextBlock Text="View" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
-                        <TextBlock Text="Picture" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True">
-                        <Button FontFamily="Segoe MDL2 Assets" Content="&#xE971;" Width="48" Height="48" Background="Transparent"></Button>
-                    </StackPanel>
-                </RelativePanel>
-            </RelativePanel>
-        </SplitView.Content>
-    </SplitView>
+									</Grid>
+								</DataTemplate>
+							</GridView.ItemTemplate>
+						</GridView>
+					</Grid>
+				</RelativePanel>
+				<RelativePanel x:Name="Footer" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+					<StackPanel Orientation="Horizontal" Height="48" RelativePanel.AlignLeftWithPanel="True">
+						<TextBlock Text="Home" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+						<TextBlock Text="Share" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+						<TextBlock Text="View" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+						<TextBlock Text="Picture" FontSize="18" VerticalAlignment="Center" Width="100" TextAlignment="Center"></TextBlock>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" RelativePanel.AlignRightWithPanel="True">
+						<Button FontFamily="Segoe MDL2 Assets" Content="&#xE971;" Width="48" Height="48" Background="Transparent"></Button>
+					</StackPanel>
+				</RelativePanel>
+			</RelativePanel>
+		</SplitView.Content>
+	</SplitView>
 </Page>
